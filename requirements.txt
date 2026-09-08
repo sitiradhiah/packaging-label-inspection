@@ -1,0 +1,5 @@
+opencv-python>=4.10,<5
+numpy>=2,<3
+
+
+# Optional OCR runs in the separate 64-bit environment: see requirements-ocr.txt.

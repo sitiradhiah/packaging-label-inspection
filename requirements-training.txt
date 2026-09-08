@@ -1,0 +1,4 @@
+# Install only in a separate 64-bit Python environment.
+ultralytics>=8.3,<9
+onnx>=1.16,<2
+
