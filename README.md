@@ -67,6 +67,17 @@ git pull
 
 Preserve local code changes before resolving any Git conflicts. Restart after an update to load the new code.
 
+### Project structure
+
+- Root Python files: dashboard, camera, detection, OCR and record storage. Existing launch commands are unchanged.
+- `models/` and `templates/`: active model and demo labels.
+- `tools/training/`: dataset generators and field-model training scripts.
+- `tools/legacy/`: earlier whole-label training and checkpoint experiments; not used by the dashboard.
+- Root `test_*.py`, `verify_*.py` and `check_setup.py`: existing checks, kept at their original paths.
+- Local environments and `results_fields/` remain in place.
+
+See [Development tools](tools/README.md) for the relocated commands.
+
 ### Notes
 
 - Python environments and camera records are not included in GitHub. Setup recreates the environments; inspections create local records.
@@ -140,6 +151,17 @@ git pull
 ```
 
 Simpan perubahan kod tempatan sebelum menyelesaikan konflik Git. Buka semula dashboard selepas kemas kini supaya kod baharu digunakan.
+
+### Struktur projek
+
+- Fail Python utama: dashboard, kamera, pengesanan, OCR dan simpanan rekod. Arahan membuka dashboard tidak berubah.
+- `models/` dan `templates/`: model aktif dan label demo.
+- `tools/training/`: penjana dataset dan latihan model medan.
+- `tools/legacy/`: eksperimen checkpoint dan latihan pengesanan seluruh label terdahulu; tidak digunakan dashboard.
+- `test_*.py`, `verify_*.py` dan `check_setup.py`: ujian sedia ada kekal di lokasi asal.
+- Persekitaran Python dan `results_fields/` tempatan dikekalkan.
+
+Rujuk [Alat pembangunan](tools/README.md) untuk arahan skrip yang dipindahkan.
 
 ### Nota
 

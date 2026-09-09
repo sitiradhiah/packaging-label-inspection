@@ -1,9 +1,15 @@
 """Run with a separate 64-bit Python environment, not the existing 32-bit .venv."""
+
+# Locate shared application modules after moving this development script.
+import sys
+from pathlib import Path
+_PROJECT_ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(_PROJECT_ROOT))
 import argparse
 import shutil
 import struct
 from pathlib import Path
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--data",required=True,help="YOLO dataset YAML with separate real validation data")
@@ -26,4 +32,3 @@ def main():
     shutil.copy2(exported,target/"parcel_label.onnx")
     print("Model exported. Restart dashboard.")
 if __name__=="__main__":main()
-

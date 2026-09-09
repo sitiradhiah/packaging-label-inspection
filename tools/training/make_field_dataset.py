@@ -1,11 +1,20 @@
 """Generate synthetic starter images; real validation images must be collected separately."""
+
+# Locate shared application modules after moving this development script.
+import sys
+from pathlib import Path
+_PROJECT_ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(_PROJECT_ROOT))
+if __name__=="__main__":
+    import os
+    os.chdir(_PROJECT_ROOT)
 from pathlib import Path
 import csv,json
 import cv2
 import numpy as np
 from make_templates import make,VALUES
 from inspection import FIELDS
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/"datasets"/"parcel_fields_v1"
 rng=np.random.default_rng(932)
 def main():

@@ -1,10 +1,19 @@
+
+# Locate shared application modules after moving this development script.
+import sys
+from pathlib import Path
+_PROJECT_ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(_PROJECT_ROOT))
+if __name__=="__main__":
+    import os
+    os.chdir(_PROJECT_ROOT)
 import os
 os.environ['OMP_NUM_THREADS']='4'
 from pathlib import Path
 import shutil
 import torch
 from ultralytics import YOLO
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 if __name__=='__main__':
  torch.set_num_threads(4)
  model=YOLO('yolo11n.pt')

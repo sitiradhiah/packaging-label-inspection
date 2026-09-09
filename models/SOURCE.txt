@@ -3,4 +3,4 @@ https://huggingface.co/webnn/yolo11n
 SHA256 7d8fd1717d9d5bbab6986cd134afb620649c7a394303d55b1e09fc00804cc5c1
 License: AGPL-3.0; see source repository.
 
-Custom parcel_fields.pt / parcel_fields.onnx: locally fine-tuned from Ultralytics YOLO11n pretrained weights (yolo11n.pt), using synthetic field datasets generated in this project. Training code: train_fields.py and train_fields_v2.py. Classes: filled, empty. Not a separately validated production model.
+Custom parcel_fields.pt / parcel_fields.onnx: locally fine-tuned from Ultralytics YOLO11n pretrained weights (yolo11n.pt), using synthetic field datasets generated in this project. Training code: tools/training/train_fields.py and tools/training/train_fields_v2.py. Classes: filled, empty. Not a separately validated production model.
