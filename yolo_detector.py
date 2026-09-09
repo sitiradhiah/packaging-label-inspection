@@ -87,7 +87,32 @@ class LabelDetector:
             result,_=inspect(frame);result["detections"]=detections
             return result
         result={"status":"RETAKE","reason":"YOLO: %d/5 medan; tunjuk satu label tegak"%len(detections),"fields":[],"detections":detections,"engine":"YOLO filled/empty"}
-        if len(detections)!=5:return result
+        if len(detections)!=5:
+            # Recover field names from fixed template positions, never from tiny headings.
+            # Missing detections stay unknown; no boxes or confidence are invented.
+            if min(frame.shape[:2])<30:return result
+            from inspection import FIELDS,MARKERS,DICT,PARAMETERS
+            corners,ids,_=cv2.aruco.ArucoDetector(DICT,PARAMETERS).detectMarkers(frame)
+            found={} if ids is None else {int(i):c.reshape(4,2) for i,c in zip(ids.flatten(),corners)}
+            if not all(i in found for i in MARKERS):return result
+            source=[];target=[]
+            for marker,(x,y) in MARKERS.items():
+                source.extend(found[marker]);target.extend([(x,y),(x+89,y),(x+89,y+89),(x,y+89)])
+            hom,mask=cv2.findHomography(np.float32(source),np.float32(target),cv2.RANSAC,3)
+            if hom is None or mask is None or int(mask.sum())<14:return result
+            for name,(x1,y1,x2,y2) in FIELDS:
+                matches=[]
+                for detection in detections:
+                    x,y,w,h=detection['box']
+                    point=cv2.perspectiveTransform(np.float32([[[x+w/2,y+h/2]]]),hom)[0,0]
+                    if x1-12<=point[0]<=x2+12 and y1-12<=point[1]<=y2+12:matches.append(detection)
+                row={'name':name,'state':'NOT_DETECTED'}
+                if len(matches)==1:
+                    row.update(state=matches[0]['class'].upper(),confidence=matches[0]['confidence'])
+                elif len(matches)>1:row['state']='UNCERTAIN'
+                result['fields'].append(row)
+            result['reason']='YOLO belum lengkap; OCR baca isi mengikut kedudukan template'
+            return result
         ordered=sorted(detections,key=lambda d:d["box"][1]+d["box"][3]/2)
         # Fixed upright template only: five separate rows with similar widths.
         boxes=[d["box"] for d in ordered]

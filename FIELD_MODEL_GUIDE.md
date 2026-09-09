@@ -4,7 +4,7 @@
 
 The dashboard loads `models/parcel_fields.onnx`, a YOLO11n model with two classes: `filled` and `empty`. Inference uses OpenCV DNN on the CPU with a 640-pixel input, confidence threshold 0.65 and class-agnostic NMS IoU threshold 0.45.
 
-Exactly five separated rows with similar widths are required. Names are assigned from top to bottom: Parcel ID, recipient name, address, postcode and shipping date. All filled means PASS; any empty means FAIL. An unmatched count or arrangement means RETAKE. A missing detection is not classified as empty.
+Exactly five separated rows with similar widths are required. Names are assigned from top to bottom: Parcel ID, recipient name, address, postcode and shipping date. All filled means PASS; any empty means FAIL. An unmatched count or arrangement means RETAKE. A missing detection is not classified as empty. When the count is not five but four template markers are visible, individual detections are mapped to their fixed field positions. Missing fields show NOT_DETECTED and ambiguous matches show UNCERTAIN; the overall result remains RETAKE. OCR continues reading fixed field contents without reading the headings.
 
 For labels filling almost the whole image, ArUco markers guide the addition of a margin before inference. Boxes are mapped back to the original image. Class labels and confidence still come from YOLO.
 

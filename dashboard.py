@@ -241,7 +241,7 @@ class Dashboard:
         status=result["status"];self.badge.configure(text=status,bg=COLOURS[status],fg="white")
         self.reason.set(result["reason"]+" | "+self.detector.status)
         states={r["name"]:r["state"] for r in result["fields"]}
-        words={"FILLED":"Berisi","EMPTY":"Kosong","UNCERTAIN":"Tidak pasti"}
+        words={"FILLED":"Berisi","EMPTY":"Kosong","UNCERTAIN":"Tidak pasti","NOT_DETECTED":"Belum dikesan"}
         for name,var in self.states.items():
             row=next((r for r in result["fields"] if r["name"]==name),{})
             label=words.get(states.get(name),"Belum diperiksa")
