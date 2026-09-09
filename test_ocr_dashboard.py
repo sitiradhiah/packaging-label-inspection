@@ -21,7 +21,7 @@ try:
  wait_for(lambda:len(saved)==1)
  assert np.array_equal(saved[0][1],full)
  assert saved[0][0]['ocr']['fields'][0]['text']=='PKG-000123'
- root.update_idletasks()
+ app.page.yview_moveto(1);root.update_idletasks()
  assert app.table.winfo_rooty()+app.table.winfo_height()<=root.winfo_rooty()+root.winfo_height()
  assert app.check_button.winfo_rooty()+app.check_button.winfo_height()<app.table.winfo_rooty()
  app.clear_ocr();assert all(v.get()=='Menunggu bacaan...' for v in app.ocr_values.values())

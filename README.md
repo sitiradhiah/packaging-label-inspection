@@ -62,6 +62,8 @@ RB3 requires Android SDK Platform Tools (ADB), exactly one authorised USB device
 
 ### Inspect and save
 
+On small screens or higher display scaling, use the dashboard scrollbars to reach all controls. Excel and folder buttons are on their own row above the status message.
+
 - Show one upright supplied label template with all five fields and four corner markers visible.
 - Green `filled` boxes indicate filled fields; red `empty` boxes indicate empty fields. Box scores are YOLO confidence, not measured accuracy.
 - **PASS:** five fields detected and all filled. **FAIL:** five detected with at least one empty. **RETAKE:** the detected count or arrangement does not match the template.
@@ -164,6 +166,8 @@ adb devices
 RB3 memerlukan Android SDK Platform Tools (ADB), hanya satu peranti USB yang dibenarkan, dan setup kamera serasi pada board dengan `gst-launch-1.0` serta `qtiqmmfsrc` (kamera indeks 0). ADB mesti berada dalam PATH atau `%LOCALAPPDATA%\Android\Sdk\platform-tools`. Sambungan RB3 bermula automatik dalam mod ini.
 
 ### Pemeriksaan dan simpanan
+
+Pada skrin kecil atau skala paparan besar, gunakan bar skrol dashboard untuk mencapai semua butang. Butang Excel dan folder berada pada baris sendiri di atas mesej status.
 
 - Tunjukkan satu template label yang dibekalkan secara tegak, dengan lima medan dan empat penanda sudut kelihatan.
 - Kotak hijau `filled` menunjukkan medan berisi; kotak merah `empty` menunjukkan medan kosong. Nombor kotak ialah confidence YOLO, bukan ukuran ketepatan projek.
