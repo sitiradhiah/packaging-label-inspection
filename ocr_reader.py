@@ -18,7 +18,7 @@ def read_fields(image,result):
         return {'status':'unavailable','message':'Label senget atau penjajaran tidak jelas.','fields':[]}
     flat=cv2.warpPerspective(image,hom,(W,H))
     python=ROOT/'.venv-train/Scripts/python.exe'
-    if not python.exists():raise RuntimeError('Persekitaran OCR belum dipasang: lihat requirements-ocr.txt')
+    if not python.exists():raise RuntimeError('Persekitaran OCR belum dipasang. Tutup dashboard dan jalankan setup.bat.')
     with tempfile.TemporaryDirectory(prefix='parcel-ocr-') as directory:
         folder=Path(directory)
         for i,(_, (x1,y1,x2,y2)) in enumerate(FIELDS):

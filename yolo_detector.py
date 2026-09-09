@@ -17,11 +17,13 @@ class LabelDetector:
         self.status="YOLO: model belum tersedia"
         if path.exists():
             try:
-                self.net=cv2.dnn.readNetFromONNX(str(path))
+                self.net=cv2.dnn.readNetFromONNX(np.fromfile(str(path),dtype=np.uint8))
                 self.status="YOLO11n aktif: objek umum, bukan kelengkapan label" if self.names==COCO else "YOLO11n parcel_label aktif"
                 if self.names==["filled","empty"]:self.status="YOLO filled/empty | model prototaip"
-            except cv2.error:
-                self.status="YOLO: model tidak dapat dibuka"
+            except (cv2.error,OSError) as exc:
+                self.error=str(exc)
+                print("YOLO load error:",path,"OpenCV",cv2.__version__,str(exc),flush=True)
+                self.status="YOLO gagal dibuka. Jalankan setup.bat; lihat ralat di terminal."
     def detect(self,frame):
         # Match the training framing when a demo label fills almost the whole image.
         # Only framing changes here; filled/empty and confidence come from YOLO.

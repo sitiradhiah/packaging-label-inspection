@@ -19,9 +19,9 @@ py -3.12 -m venv .venv-train
 .\.venv-train\Scripts\python.exe -m pip install -r requirements-ocr.txt
 ```
 
-These setup commands are needed once. The current OCR code requires the folder name `.venv-train`. The trained YOLO model is included; **training and `requirements-training.txt` are not needed to run the dashboard**.
+Alternatively, after cloning and entering the folder, run `setup.bat` instead of the manual environment commands. It installs both dashboard and OCR libraries, then checks the model and OCR. These setup steps are needed once. The current OCR code requires the folder name `.venv-train`. The trained YOLO model is included; **training and `requirements-training.txt` are not needed to run the dashboard**.
 
-**Already ran `setup.bat`?** It creates `.venv` and installs the dashboard libraries only. If it completed successfully, run only the final two OCR setup commands above. Do not repeat both setup methods.
+**Used an older `setup.bat` and see missing OCR or a model error?** Close the dashboard, run `git pull`, then run `.\setup.bat`. Existing environments are reused. Setup only reports success after YOLO and OCR checks pass. If it fails, copy the full terminal error. You can rerun the check with `.\.venv\Scripts\python.exe check_setup.py`.
 
 ### Run
 
@@ -93,9 +93,9 @@ py -3.12 -m venv .venv-train
 .\.venv-train\Scripts\python.exe -m pip install -r requirements-ocr.txt
 ```
 
-Setup ini hanya diperlukan sekali. Kod OCR semasa memerlukan nama folder `.venv-train`. Model YOLO terlatih sudah disertakan; **tidak perlu train atau install `requirements-training.txt` untuk menjalankan dashboard**.
+Sebagai alternatif selepas clone dan masuk folder, jalankan `setup.bat` menggantikan arahan persekitaran manual. Ia memasang library dashboard dan OCR, kemudian menguji model serta OCR. Setup ini hanya diperlukan sekali. Kod OCR semasa memerlukan nama folder `.venv-train`. Model YOLO terlatih sudah disertakan; **tidak perlu train atau install `requirements-training.txt` untuk menjalankan dashboard**.
 
-**Sudah jalankan `setup.bat`?** Ia hanya menyediakan `.venv` dan library dashboard. Jika berjaya, jalankan dua arahan setup OCR terakhir di atas sahaja. Tidak perlu ulang kedua-dua cara setup.
+**Pernah guna `setup.bat` lama dan OCR tiada atau model gagal dibuka?** Tutup dashboard, jalankan `git pull`, kemudian `.\setup.bat`. Persekitaran sedia ada digunakan semula. Setup hanya melaporkan berjaya selepas ujian YOLO dan OCR lulus. Jika gagal, salin ralat penuh terminal. Ujian boleh diulang dengan `.\.venv\Scripts\python.exe check_setup.py`.
 
 ### Jalankan
 
