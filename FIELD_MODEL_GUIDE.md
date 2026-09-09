@@ -10,7 +10,7 @@ For labels filling almost the whole image, ArUco markers guide the addition of a
 
 ## OCR and records
 
-RapidOCR uses pretrained models to read the five single-line fields automatically in a background process. Four ArUco corner markers align the label. OCR does not require five successful YOLO detections and does not determine PASS/FAIL.
+RapidOCR uses pretrained models to read the five single-line fields automatically in a background process. Four ArUco corner markers align the label. If marker alignment fails, OCR can use a validated PASS/FAIL result containing exactly five YOLO boxes, ordered top to bottom. Incomplete detections do not enable this fallback. OCR does not require five successful YOLO detections and does not determine PASS/FAIL.
 
 CHECK & SIMPAN reads and saves the same image. JSON records retain field states, confidence, detections and OCR text. The Excel-readable OCR export uses those saved text readings. An empty OCR reading does not prove an empty field.
 

@@ -278,7 +278,8 @@ class Dashboard:
     def launch_ocr(self,job,is_save=False):
         frame,result,source,generation,captured_at=job
         self.ocr_busy=True;self.saving=is_save
-        self.ocr_message.set("OCR sedang membaca... (automatik)")
+        if all(v.get()=="Menunggu bacaan..." for v in self.ocr_values.values()):
+            self.ocr_message.set("OCR sedang membaca... (automatik)")
         def work():
             try:
                 try:result['ocr']=read_fields(frame,result)

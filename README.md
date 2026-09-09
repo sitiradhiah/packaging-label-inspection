@@ -62,6 +62,8 @@ RB3 requires Android SDK Platform Tools (ADB), exactly one authorised USB device
 
 ### Inspect and save
 
+OCR uses corner markers first. If alignment fails but YOLO detects five valid field boxes, OCR reads those boxes instead. Text still needs to be clear.
+
 On small screens or higher display scaling, use the dashboard scrollbars to reach all controls. Excel and folder buttons are on their own row above the status message.
 
 - Show one upright supplied label template with all five fields and four corner markers visible.
@@ -166,6 +168,8 @@ adb devices
 RB3 memerlukan Android SDK Platform Tools (ADB), hanya satu peranti USB yang dibenarkan, dan setup kamera serasi pada board dengan `gst-launch-1.0` serta `qtiqmmfsrc` (kamera indeks 0). ADB mesti berada dalam PATH atau `%LOCALAPPDATA%\Android\Sdk\platform-tools`. Sambungan RB3 bermula automatik dalam mod ini.
 
 ### Pemeriksaan dan simpanan
+
+OCR menggunakan penanda sudut dahulu. Jika penjajaran gagal tetapi YOLO mengesan lima kotak medan yang sah, OCR membaca kotak tersebut. Tulisan masih perlu jelas.
 
 Pada skrin kecil atau skala paparan besar, gunakan bar skrol dashboard untuk mencapai semua butang. Butang Excel dan folder berada pada baris sendiri di atas mesej status.
 
