@@ -4,7 +4,23 @@ YOLO, OpenCV and automatic OCR for a fixed parcel label template.
 
 ## English
 
-### Setup on Windows
+### ZIP / WhatsApp setup (no Git required)
+
+1. Install Python 3.12 (64-bit) with the Python launcher (`py`).
+2. Right-click the ZIP and select **Extract All**. Open the extracted folder containing `setup.bat`.
+3. Run `setup.bat` once. Internet is needed to install dashboard and OCR libraries.
+4. Wait for **YOLO: PASS** and **OCR: PASS**.
+5. Open `run-webcam.bat`, then click **Mula Webcam**. Use **Buka Gambar Demo** to test without a camera.
+
+Do not run the program inside the ZIP. Git and a GitHub account are not required for a ZIP received through WhatsApp. No model training is needed.
+
+If `run-webcam.bat` is unavailable, open a terminal in the extracted folder and run:
+
+```powershell
+.\.venv\Scripts\python.exe dashboard.py --webcam
+```
+
+### GitHub clone setup (alternative)
 
 Install **Git** and **Python 3.12 (64-bit)**, including the Python launcher (`py`). Internet access is needed for installation. This repository is private; your GitHub account needs access before cloning.
 
@@ -21,7 +37,7 @@ py -3.12 -m venv .venv-train
 
 Alternatively, after cloning and entering the folder, run `setup.bat` instead of the manual environment commands. It installs both dashboard and OCR libraries, then checks the model and OCR. These setup steps are needed once. The current OCR code requires the folder name `.venv-train`. The trained YOLO model is included; **training and `requirements-training.txt` are not needed to run the dashboard**.
 
-**Used an older `setup.bat` and see missing OCR or a model error?** Close the dashboard, run `git pull`, then run `.\setup.bat`. Existing environments are reused. Setup only reports success after YOLO and OCR checks pass. If it fails, copy the full terminal error. You can rerun the check with `.\.venv\Scripts\python.exe check_setup.py`.
+**Missing OCR or model error after using an older setup?** Follow the update method below for your ZIP or Git copy, then rerun `setup.bat`. Existing environments are reused. Setup only reports success after YOLO and OCR checks pass. If it fails, copy the full terminal error. You can rerun the check with `.\.venv\Scripts\python.exe check_setup.py`.
 
 ### Run
 
@@ -56,7 +72,9 @@ RB3 requires Android SDK Platform Tools (ADB), exactly one authorised USB device
 
 ### Update
 
-Close the dashboard. In the project folder, run:
+**ZIP users:** obtain the latest ZIP and extract it into a new folder. Run its `setup.bat` and then `run-webcam.bat`. Keep the old folder if it contains inspection records; ZIP updates do not transfer those records automatically. Do not use `git pull` for a ZIP copy.
+
+**Git clone users:** close the dashboard. In the project folder, run:
 
 ```powershell
 git pull
@@ -89,7 +107,23 @@ See [Development tools](tools/README.md) for the relocated commands.
 
 ## Bahasa Melayu
 
-### Setup pada Windows
+### Setup ZIP / WhatsApp (tidak perlu Git)
+
+1. Install Python 3.12 (64-bit) bersama Python launcher (`py`).
+2. Klik kanan ZIP dan pilih **Extract All**. Buka folder hasil extract yang mengandungi `setup.bat`.
+3. Jalankan `setup.bat` sekali. Internet diperlukan untuk memasang library dashboard dan OCR.
+4. Tunggu **YOLO: PASS** dan **OCR: PASS**.
+5. Buka `run-webcam.bat`, kemudian klik **Mula Webcam**. Pilih **Buka Gambar Demo** untuk mencuba tanpa kamera.
+
+Jangan jalankan program dari dalam ZIP. Git dan akaun GitHub tidak diperlukan untuk ZIP yang diterima melalui WhatsApp. Model tidak perlu dilatih semula.
+
+Jika `run-webcam.bat` tiada, buka terminal dalam folder hasil extract dan jalankan:
+
+```powershell
+.\.venv\Scripts\python.exe dashboard.py --webcam
+```
+
+### Setup melalui GitHub clone (alternatif)
 
 Install **Git** dan **Python 3.12 (64-bit)** bersama Python launcher (`py`). Internet diperlukan semasa pemasangan. Repositori ini private; akaun GitHub anda perlu diberi akses sebelum clone.
 
@@ -106,7 +140,7 @@ py -3.12 -m venv .venv-train
 
 Sebagai alternatif selepas clone dan masuk folder, jalankan `setup.bat` menggantikan arahan persekitaran manual. Ia memasang library dashboard dan OCR, kemudian menguji model serta OCR. Setup ini hanya diperlukan sekali. Kod OCR semasa memerlukan nama folder `.venv-train`. Model YOLO terlatih sudah disertakan; **tidak perlu train atau install `requirements-training.txt` untuk menjalankan dashboard**.
 
-**Pernah guna `setup.bat` lama dan OCR tiada atau model gagal dibuka?** Tutup dashboard, jalankan `git pull`, kemudian `.\setup.bat`. Persekitaran sedia ada digunakan semula. Setup hanya melaporkan berjaya selepas ujian YOLO dan OCR lulus. Jika gagal, salin ralat penuh terminal. Ujian boleh diulang dengan `.\.venv\Scripts\python.exe check_setup.py`.
+**OCR tiada atau model gagal selepas menggunakan setup lama?** Ikut cara kemas kini ZIP atau Git di bawah, kemudian jalankan semula `setup.bat`. Persekitaran sedia ada digunakan semula. Setup hanya melaporkan berjaya selepas ujian YOLO dan OCR lulus. Jika gagal, salin ralat penuh terminal. Ujian boleh diulang dengan `.\.venv\Scripts\python.exe check_setup.py`.
 
 ### Jalankan
 
@@ -141,7 +175,9 @@ RB3 memerlukan Android SDK Platform Tools (ADB), hanya satu peranti USB yang dib
 
 ### Kemas kini
 
-Tutup dashboard. Dalam folder projek, jalankan:
+**Pengguna ZIP:** dapatkan ZIP terkini dan extract ke folder baharu. Jalankan `setup.bat`, kemudian `run-webcam.bat`. Simpan folder lama jika ada rekod pemeriksaan; rekod tidak dipindahkan secara automatik. Jangan gunakan `git pull` untuk salinan ZIP.
+
+**Pengguna Git clone:** tutup dashboard. Dalam folder projek, jalankan:
 
 ```powershell
 git pull
