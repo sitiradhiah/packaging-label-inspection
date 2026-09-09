@@ -1,19 +1,35 @@
-# YOLO Field Inspection
+# Model details
 
-Model: YOLO11n, classes 0 filled and 1 empty. OpenCV DNN inference on CPU, fixed 640 input, confidence threshold 0.65 and class-agnostic NMS IoU 0.45. Confidence is the model score, not calibrated accuracy.
+## Detection
 
-The dashboard prefers models/parcel_fields.onnx. Green boxes mean filled and red boxes mean empty. Exactly five separated rows with similar widths are required; otherwise RETAKE. Any detected empty row -> FAIL; five filled rows -> PASS. Missing detection is never automatically classified as empty.
+The dashboard loads `models/parcel_fields.onnx`, a YOLO11n model with two classes: `filled` and `empty`. Inference uses OpenCV DNN on the CPU with a 640-pixel input, confidence threshold 0.65 and class-agnostic NMS IoU threshold 0.45.
 
-Field names are assigned top-to-bottom for one upright supplied template. YOLO does not read or validate content. A separate pretrained OCR step now reads text on CHECK & SIMPAN; it does not change the YOLO verdict. Raw image, field states, confidence and detections are retained in the result JSON when saved.
+Exactly five separated rows with similar widths are required. Names are assigned from top to bottom: Parcel ID, recipient name, address, postcode and shipping date. All filled means PASS; any empty means FAIL. An unmatched count or arrangement means RETAKE. A missing detection is not classified as empty.
 
-Training environment: .venv-train (64-bit Python). Dashboard environment: .venv (original Python).
-Stage 1: YOLO11n pretrained weights, datasets/parcel_fields_v1.
-Stage 2: models/fields-stage1.pt, datasets/parcel_fields_v3, train_fields_v2.py.
-Each dataset contains 200 training / 40 validation synthetic scenes, including negative backgrounds. Stage 2 varies all 32 filled/empty combinations. The validation set shares the template family, so metrics are training diagnostics, NOT independent real-camera accuracy.
+For labels filling almost the whole image, ArUco markers guide the addition of a margin before inference. Boxes are mapped back to the original image. Class labels and confidence still come from YOLO.
 
-Train/export: .venv-train\Scripts\python.exe train_fields_v2.py
-Dashboard: .venv\Scripts\python.exe dashboard.py
+## OCR and records
 
-Before a class demonstration, test complete and incomplete labels using the chosen camera. Keep all fields in focus and visible. Collect independently captured images under different lighting and distances before claiming real-world accuracy. Source pretrained YOLO11 weights and Ultralytics training software use their applicable Ultralytics licence; see models/SOURCE.txt.
+RapidOCR uses pretrained models to read the five single-line fields automatically in a background process. Four ArUco corner markers align the label. OCR does not require five successful YOLO detections and does not determine PASS/FAIL.
 
-For demo images whose corner markers span almost the full image, the detector adds a grey margin before YOLO inference and maps boxes back to original coordinates. ArUco only controls framing; the field class and confidence still come from YOLO.
+CHECK & SIMPAN reads and saves the same image. JSON records retain field states, confidence, detections and OCR text. The Excel-readable OCR export uses those saved text readings. An empty OCR reading does not prove an empty field.
+
+## Training and limitations
+
+The model was fine-tuned from pretrained YOLO11n using synthetic label images. Each training stage used 200 training and 40 validation scenes, including negative backgrounds. The second stage varied all 32 filled/empty combinations.
+
+Validation shared the same template family and is not an independent measure of camera accuracy. Use one upright supplied template. Blur, glare, small text and different layouts can affect detection and OCR. Text recognition does not verify the validity of the information.
+
+Training is optional for development. The repository includes the inference model, but excludes generated datasets, training checkpoints and runs. Training scripts require those inputs; they are not part of normal setup. Model provenance is recorded in [models/SOURCE.txt](models/SOURCE.txt).
+
+## Checks without a camera
+
+After completing the README setup, run:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest test_fields test_yolo_field_rules
+.\.venv\Scripts\python.exe dashboard.py --smoke-test
+.\.venv\Scripts\python.exe test_ocr_dashboard.py
+```
+
+These checks cover inspection rules, dashboard rendering, automatic OCR, text clearing and saving the correct image. They do not measure live camera performance.

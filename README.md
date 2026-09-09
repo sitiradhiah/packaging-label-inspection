@@ -1,87 +1,62 @@
 # Parcel Label Inspection Dashboard
 
-YOLO + OpenCV + live OCR for inspecting a fixed parcel label template.
+YOLO, OpenCV and automatic OCR for a fixed parcel label template.
 
 ## English
 
-### About the project
+### Setup on Windows
 
-The dashboard checks five fields: Parcel ID, recipient name, address, postcode and shipping date. YOLO detects filled or empty fields, while pretrained RapidOCR reads the text automatically and displays it beside each field's status.
+Install **Git** and **Python 3.12 (64-bit)**, including the Python launcher (`py`). Internet access is needed for installation. This repository is private; your GitHub account needs access before cloning.
 
-- Green box: `filled`. Red box: `empty`.
-- Each box displays the YOLO confidence score (0 to 1), not the project's measured accuracy.
-- **PASS:** all five fields are detected and filled.
-- **FAIL:** all five fields are detected and at least one is empty.
-- **RETAKE:** the field count or arrangement does not match the expected template.
-
-### Requirements for another Windows laptop
-
-1. Install **Git** and **Python 3.12 (64-bit)**. Enable **Add Python to PATH** and install the Python launcher (`py`).
-2. Have an internet connection for the initial download and dependency installation.
-3. Use a built-in/USB webcam, an appropriately configured Qualcomm RB3, or the supplied demo images.
-4. Sign in with a GitHub account that has access to this **private repository**. The owner must grant access before you can clone or pull it.
-
-A dedicated GPU is not required to run the dashboard; it uses OpenCV DNN on the CPU. The trained YOLO model is included, so **you do not need to train a model again**.
-
-### First-time setup
-
-Open PowerShell or the VS Code terminal and run:
+Run in PowerShell or the VS Code terminal:
 
 ```powershell
 git clone https://github.com/sitiradhiah/packaging-label-inspection.git
 cd packaging-label-inspection
-```
-
-Create the dashboard environment and install its libraries:
-
-```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
-
-Create the separate 64-bit OCR environment:
-
-```powershell
 py -3.12 -m venv .venv-train
 .\.venv-train\Scripts\python.exe -m pip install -r requirements-ocr.txt
 ```
 
-The folder name `.venv-train` is required by the current OCR code, even when you only run OCR. **Do not install `requirements-training.txt` unless you intend to train a model.** No environment activation command is needed when using the full Python paths above.
+These setup commands are needed once. The current OCR code requires the folder name `.venv-train`. The trained YOLO model is included; **training and `requirements-training.txt` are not needed to run the dashboard**.
 
-### Run with a laptop webcam
+**Already ran `setup.bat`?** It creates `.venv` and installs the dashboard libraries only. If it completed successfully, run only the final two OCR setup commands above. Do not repeat both setup methods.
+
+### Run
+
+For a laptop webcam:
 
 ```powershell
 .\.venv\Scripts\python.exe dashboard.py --webcam
 ```
 
-Click **Mula Webcam** to start the camera. Alternatively, click **Buka Gambar Demo** and select a file from `templates` to try the project without a camera.
+Click **Mula Webcam**, or **Buka Gambar Demo** to select an image from `templates` without a camera.
 
-### Run with Qualcomm RB3
+`run.bat` opens the dashboard with **RB3 selected by default**. If it is already open, no extra launch command is needed. Click **Henti** before changing the camera selection.
 
-RB3 additionally requires Android SDK **Platform Tools (ADB)** on the laptop, an authorised USB connection, and a compatible camera/GStreamer setup on the board. The current code expects `gst-launch-1.0`, `qtiqmmfsrc` and camera index 0 on the RB3. It searches for ADB on PATH or at `%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe`.
-
-Connect exactly one authorised ADB device and check the connection:
+For RB3:
 
 ```powershell
 adb devices
 .\.venv\Scripts\python.exe dashboard.py --rb3
 ```
 
-The RB3 connection starts automatically in this mode. Running `dashboard.py` without options, or opening `run.bat`, also uses RB3 by default. Click **Henti** before changing the camera source.
+RB3 requires Android SDK Platform Tools (ADB), exactly one authorised USB device, and a compatible camera setup on the board with `gst-launch-1.0` and `qtiqmmfsrc` (camera index 0). ADB must be on PATH or in `%LOCALAPPDATA%\Android\Sdk\platform-tools`. RB3 connects automatically when launched in this mode.
 
 ### Inspect and save
 
-1. Show one upright label using the supplied template, with all five fields and four corner markers visible.
-2. YOLO boxes and field statuses appear in the camera view and right panel.
-3. OCR reads automatically; no CHECK click is needed. The right panel displays the latest recognised text and capture time. Demo readings took around 1-2 seconds; speed depends on the computer and image. OCR does not update on every video frame.
-4. Click **CHECK & SIMPAN** to save an inspection. OCR is read from the same image that is saved. Automatic readings do not add history records.
-5. Click **Buka Excel (OCR)** to generate and open the CSV containing recognised text. Use **Folder Keputusan** to find saved images, JSON details and CSV records in `results_fields`.
+- Show one upright supplied label template with all five fields and four corner markers visible.
+- Green `filled` boxes indicate filled fields; red `empty` boxes indicate empty fields. Box scores are YOLO confidence, not measured accuracy.
+- **PASS:** five fields detected and all filled. **FAIL:** five detected with at least one empty. **RETAKE:** the detected count or arrangement does not match the template.
+- OCR automatically displays text beside each field. It updates periodically, not on every video frame. No CHECK click is needed to read text.
+- **CHECK & SIMPAN** saves the image, inspection result and OCR text from that image. Automatic OCR does not save history.
+- **Buka Excel (OCR)** opens a CSV with recognised text instead of `FILLED`/`EMPTY`. **Folder Keputusan** opens `results_fields`, containing CSV, JSON and image records.
+- Close a CSV in Excel before writing to the same file. A locked OCR export is saved as a timestamped copy.
 
-The OCR export uses the saved JSON readings, replacing field-status words such as `FILLED` with recognised text. Close a CSV in Excel before saving to that same file. If the OCR export is locked, the export button creates a timestamped copy.
+### Update
 
-### Update an existing copy
-
-Stop the dashboard, open a terminal in the project folder, then run:
+Close the dashboard. In the project folder, run:
 
 ```powershell
 git pull
@@ -90,110 +65,72 @@ git pull
 .\.venv\Scripts\python.exe dashboard.py --webcam
 ```
 
-Keep your local code changes before resolving any Git conflicts. Restart the dashboard after updates so it loads the new code.
+Preserve local code changes before resolving any Git conflicts. Restart after an update to load the new code.
 
-### What is included in GitHub?
+### Notes
 
-- Application code, dependency lists, demo label templates and `models/parcel_fields.onnx`.
-- Python environments (`.venv`, `.venv-train`) are excluded: recreate them using the setup steps.
-- Camera records, logs, generated datasets and training runs are excluded. They remain on the original laptop.
-
-### Limitations and checks
-
-The YOLO model was trained on synthetic images from one template family. All 32 filled/empty demo combinations passed checks, but independent real-world camera accuracy has not been measured. Blur, glare, small text and unusual angles can affect results. OCR can omit spaces or misread characters and does not validate the meaning or correctness of an ID, address or date. Four corner markers are required for the current OCR alignment; OCR can run even when YOLO has not detected all five fields.
-
-Run the basic checks without opening a camera:
-
-```powershell
-.\.venv\Scripts\python.exe -m unittest test_fields test_yolo_field_rules
-.\.venv\Scripts\python.exe dashboard.py --smoke-test
-.\.venv\Scripts\python.exe test_ocr_dashboard.py
-```
-
-See [FIELD_MODEL_GUIDE.md](FIELD_MODEL_GUIDE.md) for model details. Training scripts are for development and need their generated datasets/checkpoints; they are not required for normal dashboard use. `app.py` and `inspection.py` retain the earlier OpenCV inspection method for comparison.
+- Python environments and camera records are not included in GitHub. Setup recreates the environments; inspections create local records.
+- This prototype uses synthetic training images and a fixed template. Real-world camera accuracy has not been independently measured.
+- Blur, glare and small text affect results. OCR can misread characters or spaces and does not validate addresses, IDs or dates.
+- See [Model details](FIELD_MODEL_GUIDE.md) for detection rules and checks, and [Model sources](models/SOURCE.txt) for provenance.
 
 ---
 
 ## Bahasa Melayu
 
-### Tentang projek
+### Setup pada Windows
 
-Dashboard memeriksa lima medan: Parcel ID, nama penerima, alamat, poskod dan tarikh penghantaran. YOLO mengesan medan berisi atau kosong, manakala RapidOCR pralatih membaca teks secara automatik dan memaparkannya bersama status medan.
+Install **Git** dan **Python 3.12 (64-bit)** bersama Python launcher (`py`). Internet diperlukan semasa pemasangan. Repositori ini private; akaun GitHub anda perlu diberi akses sebelum clone.
 
-- Kotak hijau: `filled`. Kotak merah: `empty`.
-- Nombor pada kotak ialah confidence YOLO (0 hingga 1), bukan ukuran ketepatan keseluruhan projek.
-- **PASS:** lima medan dikesan dan semuanya berisi.
-- **FAIL:** lima medan dikesan dan sekurang-kurangnya satu kosong.
-- **RETAKE:** bilangan atau susunan medan tidak memenuhi template.
-
-### Keperluan laptop Windows lain
-
-1. Install **Git** dan **Python 3.12 versi 64-bit**. Pilih **Add Python to PATH** dan pasang Python launcher (`py`).
-2. Sambungan internet diperlukan untuk muat turun awal dan pemasangan library.
-3. Gunakan webcam built-in/USB, Qualcomm RB3 yang sudah dikonfigurasi, atau gambar demo.
-4. Akaun GitHub mesti mempunyai akses kepada **repositori private** ini sebelum boleh clone atau pull.
-
-GPU berasingan tidak diwajibkan kerana dashboard menggunakan OpenCV DNN pada CPU. Model YOLO terlatih sudah disertakan, jadi **tidak perlu train semula**.
-
-### Setup kali pertama
-
-Buka PowerShell atau terminal VS Code:
+Jalankan dalam PowerShell atau terminal VS Code:
 
 ```powershell
 git clone https://github.com/sitiradhiah/packaging-label-inspection.git
 cd packaging-label-inspection
-```
-
-Sediakan persekitaran dashboard:
-
-```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
-
-Sediakan persekitaran OCR 64-bit:
-
-```powershell
 py -3.12 -m venv .venv-train
 .\.venv-train\Scripts\python.exe -m pip install -r requirements-ocr.txt
 ```
 
-Nama folder `.venv-train` memang digunakan oleh kod OCR sekarang. **Tidak perlu install `requirements-training.txt` jika hanya mahu menjalankan dashboard.** Arahan activation tidak diperlukan kerana arahan di atas menggunakan laluan Python penuh.
+Setup ini hanya diperlukan sekali. Kod OCR semasa memerlukan nama folder `.venv-train`. Model YOLO terlatih sudah disertakan; **tidak perlu train atau install `requirements-training.txt` untuk menjalankan dashboard**.
 
-### Jalankan dengan webcam laptop
+**Sudah jalankan `setup.bat`?** Ia hanya menyediakan `.venv` dan library dashboard. Jika berjaya, jalankan dua arahan setup OCR terakhir di atas sahaja. Tidak perlu ulang kedua-dua cara setup.
+
+### Jalankan
+
+Untuk webcam laptop:
 
 ```powershell
 .\.venv\Scripts\python.exe dashboard.py --webcam
 ```
 
-Klik **Mula Webcam**, atau **Buka Gambar Demo** dan pilih gambar dalam `templates` untuk mencuba tanpa kamera.
+Klik **Mula Webcam**, atau **Buka Gambar Demo** untuk memilih gambar dalam `templates` tanpa kamera.
 
-### Jalankan dengan Qualcomm RB3
+`run.bat` membuka dashboard dengan **RB3 sebagai pilihan lalai**. Jika dashboard sudah terbuka, tidak perlu arahan tambahan untuk membukanya lagi. Tekan **Henti** sebelum menukar pilihan kamera.
 
-Laptop perlu mempunyai Android SDK **Platform Tools (ADB)**, sambungan USB yang dibenarkan dan setup kamera/GStreamer yang serasi pada board. Kod semasa menggunakan `gst-launch-1.0`, `qtiqmmfsrc` dan kamera indeks 0. ADB dicari melalui PATH atau `%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe`.
-
-Sambungkan hanya satu peranti ADB yang dibenarkan:
+Untuk RB3:
 
 ```powershell
 adb devices
 .\.venv\Scripts\python.exe dashboard.py --rb3
 ```
 
-RB3 bermula secara automatik dalam mod ini. `dashboard.py` tanpa pilihan dan `run.bat` juga menggunakan RB3 secara lalai. Tekan **Henti** sebelum menukar sumber kamera.
+RB3 memerlukan Android SDK Platform Tools (ADB), hanya satu peranti USB yang dibenarkan, dan setup kamera serasi pada board dengan `gst-launch-1.0` serta `qtiqmmfsrc` (kamera indeks 0). ADB mesti berada dalam PATH atau `%LOCALAPPDATA%\Android\Sdk\platform-tools`. Sambungan RB3 bermula automatik dalam mod ini.
 
 ### Pemeriksaan dan simpanan
 
-1. Tunjukkan satu label tegak dengan lima medan dan empat penanda sudut yang jelas.
-2. Kotak YOLO serta status medan dipaparkan pada kamera dan panel kanan.
-3. OCR membaca secara automatik tanpa menekan CHECK. Teks terkini dan masa tangkapan dipaparkan di kanan. Ujian demo mengambil sekitar 1-2 saat; kelajuan bergantung pada komputer dan gambar. OCR bukan dikemas kini pada setiap frame video.
-4. Tekan **CHECK & SIMPAN** untuk menyimpan rekod. OCR membaca gambar yang sama disimpan. Bacaan automatik tidak menambah sejarah.
-5. Tekan **Buka Excel (OCR)** untuk membuka CSV berisi teks OCR. **Folder Keputusan** membuka `results_fields` yang mengandungi gambar, JSON dan CSV.
+- Tunjukkan satu template label yang dibekalkan secara tegak, dengan lima medan dan empat penanda sudut kelihatan.
+- Kotak hijau `filled` menunjukkan medan berisi; kotak merah `empty` menunjukkan medan kosong. Nombor kotak ialah confidence YOLO, bukan ukuran ketepatan projek.
+- **PASS:** lima medan dikesan dan semuanya berisi. **FAIL:** lima medan dikesan dengan sekurang-kurangnya satu kosong. **RETAKE:** bilangan atau susunan medan tidak memenuhi template.
+- OCR memaparkan teks di sebelah setiap medan secara automatik dan berkala, bukan pada setiap frame video. Tidak perlu tekan CHECK untuk membaca teks.
+- **CHECK & SIMPAN** menyimpan gambar, keputusan pemeriksaan dan teks OCR daripada gambar itu. Bacaan automatik tidak menyimpan sejarah.
+- **Buka Excel (OCR)** membuka CSV dengan teks bacaan menggantikan `FILLED`/`EMPTY`. **Folder Keputusan** membuka `results_fields` yang mengandungi CSV, JSON dan gambar.
+- Tutup CSV dalam Excel sebelum menyimpan ke fail yang sama. Eksport OCR yang dikunci akan disimpan sebagai salinan dengan cap masa.
 
-Eksport OCR mengambil teks daripada rekod JSON, menggantikan perkataan seperti `FILLED` dalam lajur medan. Tutup CSV dalam Excel sebelum menyimpan ke fail yang sama. Jika fail eksport dikunci, butang eksport menghasilkan salinan dengan cap masa.
+### Kemas kini
 
-### Kemas kini projek yang sudah dimuat turun
-
-Tutup dashboard, masuk folder projek dalam terminal dan jalankan:
+Tutup dashboard. Dalam folder projek, jalankan:
 
 ```powershell
 git pull
@@ -204,22 +141,9 @@ git pull
 
 Simpan perubahan kod tempatan sebelum menyelesaikan konflik Git. Buka semula dashboard selepas kemas kini supaya kod baharu digunakan.
 
-### Kandungan GitHub
+### Nota
 
-- Kod aplikasi, senarai library, template demo dan model `models/parcel_fields.onnx` disertakan.
-- `.venv` dan `.venv-train` tidak dimuat naik; bina semula menggunakan langkah setup.
-- Rekod kamera, log, dataset yang dijana dan hasil latihan tidak dimuat naik. Fail tersebut kekal pada laptop asal.
-
-### Batasan dan ujian
-
-Model YOLO dilatih dengan gambar sintetik daripada satu keluarga template. Semua 32 kombinasi demo berisi/kosong lulus ujian, tetapi ketepatan menggunakan set ujian kamera sebenar yang bebas belum diukur. Kabur, pantulan, tulisan kecil dan sudut kamera boleh mempengaruhi keputusan. OCR boleh kehilangan jarak antara perkataan atau tersalah baca aksara. Ia tidak mengesahkan kesahihan ID, alamat atau tarikh. Empat penanda sudut diperlukan untuk penjajaran OCR semasa; OCR boleh berjalan walaupun YOLO belum mengesan kelima-lima medan.
-
-Ujian asas tanpa membuka kamera:
-
-```powershell
-.\.venv\Scripts\python.exe -m unittest test_fields test_yolo_field_rules
-.\.venv\Scripts\python.exe dashboard.py --smoke-test
-.\.venv\Scripts\python.exe test_ocr_dashboard.py
-```
-
-Rujuk [FIELD_MODEL_GUIDE.md](FIELD_MODEL_GUIDE.md) untuk butiran model. Skrip latihan memerlukan dataset/checkpoint berkaitan dan tidak diperlukan untuk penggunaan biasa. `app.py` dan `inspection.py` mengekalkan kaedah pemeriksaan OpenCV terdahulu untuk perbandingan.
+- Persekitaran Python dan rekod kamera tidak dimuat naik ke GitHub. Setup membina semula persekitaran; pemeriksaan menghasilkan rekod tempatan.
+- Prototaip ini menggunakan gambar latihan sintetik dan template tetap. Ketepatan kamera sebenar belum diukur melalui set ujian bebas.
+- Kabur, pantulan dan tulisan kecil mempengaruhi keputusan. OCR boleh tersalah baca aksara atau jarak perkataan dan tidak mengesahkan kesahihan alamat, ID atau tarikh.
+- Rujuk [Butiran model](FIELD_MODEL_GUIDE.md) untuk peraturan pengesanan dan ujian, serta [Sumber model](models/SOURCE.txt).
