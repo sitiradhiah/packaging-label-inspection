@@ -15,7 +15,16 @@ def save(result,frame):
     folder=ROOT/"results_fields";folder.mkdir(exist_ok=True)
     stamp=datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     photo=folder/(stamp+".jpg")
-    if not cv2.imwrite(str(photo),frame): raise OSError("Image save failed")
+    # Encode first, then let Python write the Unicode Windows path.
+    try:
+        ok,encoded=cv2.imencode(".jpg",frame)
+    except cv2.error as exc:
+        raise OSError("Gambar tidak dapat diproses sebagai JPEG: "+str(exc)) from exc
+    if not ok:raise OSError("Gambar tidak dapat diproses sebagai JPEG")
+    try:
+        photo.write_bytes(encoded.tobytes())
+    except OSError as exc:
+        raise OSError("Gagal menulis gambar ke "+str(photo)+": "+str(exc)) from exc
     (folder/(stamp+".json")).write_text(json.dumps(result,indent=2),encoding="utf-8")
     log=folder/"inspections.csv"
     new=not log.exists()
